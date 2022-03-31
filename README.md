@@ -15,3 +15,7 @@ RegisterNetEvent('QBCore:Server:UpdateObject', function()
     QBCore = exports['qb-core']:GetCoreObject()
 end)
 ```
+
+TODO
+
+- add options to craft the items
