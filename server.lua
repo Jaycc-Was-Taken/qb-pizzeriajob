@@ -14,6 +14,34 @@ local function GetCraftingItems(itemname)
     end
 end
 
+local function RegisterUseableItems(foodtype, itemname)
+    if foodtype == "food" then
+        QBCore.Functions.CreateUseableItem(itemname, function(source, item)
+            local src = source
+            local Player = QBCore.Functions.GetPlayer(src)
+            if Player.Functions.GetItemByName(item.name) ~= nil then
+                TriggerClientEvent("qb-pizzeriajob:client:UseFood", src, item.name)
+            end
+        end)
+    elseif foodtype == "drink" then
+        QBCore.Functions.CreateUseableItem(itemname, function(source, item)
+            local src = source
+            local Player = QBCore.Functions.GetPlayer(src)
+            if Player.Functions.GetItemByName(item.name) ~= nil then
+                TriggerClientEvent("qb-pizzeriajob:client:UseDrink", src, item.name)
+            end
+        end)
+    elseif foodtype == "dessert" then
+        QBCore.Functions.CreateUseableItem(itemname, function(source, item)
+            local src = source
+            local Player = QBCore.Functions.GetPlayer(src)
+            if Player.Functions.GetItemByName(item.name) ~= nil then
+                TriggerClientEvent("qb-pizzeriajob:client:UseDessert", src, item.name)
+            end
+        end)
+    end
+end
+
 RegisterNetEvent('QBCore:Server:UpdateObject', function()
     if source ~= '' then return false end -- Safety check if the event was not called from the server.
     QBCore = exports['qb-core']:GetCoreObject()
@@ -89,10 +117,15 @@ Citizen.CreateThread(function()
             description = v.description
         }
         exports["qb-core"]:AddItem(infotable.name, infotable)
+        RegisterUseableItems(v.foodtype, v.name)
     end
-    
 end)
 
+RegisterServerEvent("qb-pizzeriajob:server:removeItem", function(itemName)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    Player.Functions.RemoveItem(itemName, 1)
+end)
 
 RegisterServerEvent("qb-additem:server:additem", function(itemName, label, weight, image, description, foodtype)
     local infotable = {
@@ -112,6 +145,7 @@ RegisterServerEvent("qb-additem:server:additem", function(itemName, label, weigh
     infotable.foodtype = foodtype
     table.insert(ItemsTable, infotable)
     SaveResourceFile(GetCurrentResourceName(), "json/items.json", json.encode(ItemsTable), -1)
+    RegisterUseableItems(foodtype, itemName)
 end)
 
 local function HasCrafting(itemName)

@@ -13,7 +13,8 @@ shared_scripts {
 
 client_scripts {
     'client.lua',
-    'zones.lua'
+    'zones.lua',
+    'cl_useableitems.lua'
 }
 
 server_scripts {
