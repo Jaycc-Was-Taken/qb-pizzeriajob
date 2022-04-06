@@ -128,7 +128,6 @@ RegisterServerEvent("qb-additem:server:addcrafting", function(itemName, ingredie
     local infotable = {}    
     if QBCore.Shared.Items[ingredient1] ~= nil and QBCore.Shared.Items[ingredient1] ~= nil and QBCore.Shared.Items[ingredient3] ~= nil and QBCore.Shared.Items[ingredient4] ~= nil and QBCore.Shared.Items[ingredient5] ~= nil then
         if index ~= nil then
-            print(CraftTable[index].item)
             CraftTable[index].ingredient1 = ingredient1
             CraftTable[index].ingredient2 = ingredient2
             CraftTable[index].ingredient3 = ingredient3
@@ -161,7 +160,6 @@ RegisterServerEvent("qb-additem:server:setItems", function(type, list)
     for k, v in pairs(list) do
         if v == "true" then
             if type == "food" then
-                print("food", json.encode(FoodTable), k)
                 table.insert(FoodTable, k)
             elseif type == "drink" then
                 table.insert(DrinkTable, k)
