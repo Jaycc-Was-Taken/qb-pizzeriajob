@@ -10,7 +10,7 @@ end)
 
 -- RegisterCommand("createnewitem", function()
     
-RegisterNetEvent("qb-addnewitems:client:OpenOwnerMenu", function()
+RegisterNetEvent("qb-pizzeriajob:client:OpenOwnerMenu", function()
     local bossMenu = {
         {
             header = "Pizzeria Boss Menu",
@@ -21,14 +21,14 @@ RegisterNetEvent("qb-addnewitems:client:OpenOwnerMenu", function()
         header = "Create new Food Item",
         txt = "",
         params = {
-            event = "qb-addnewitems:client:CreateNewItem",
+            event = "qb-pizzeriajob:client:CreateNewItem",
         }
     }
     bossMenu[#bossMenu+1] = {
         header = "Set Food Menu",
         txt = "",
         params = {
-            event = "qb-addnewitems:client:setMenu",
+            event = "qb-pizzeriajob:client:setMenu",
             args = {
                 type = "food"
             },
@@ -38,7 +38,7 @@ RegisterNetEvent("qb-addnewitems:client:OpenOwnerMenu", function()
         header = "Set Drink Menu",
         txt = "",
         params = {
-            event = "qb-addnewitems:client:setMenu",
+            event = "qb-pizzeriajob:client:setMenu",
             args = {
                 type = "drink"
             },
@@ -48,7 +48,7 @@ RegisterNetEvent("qb-addnewitems:client:OpenOwnerMenu", function()
         header = "Set Dessert Menu",
         txt = "",
         params = {
-            event = "qb-addnewitems:client:setMenu",
+            event = "qb-pizzeriajob:client:setMenu",
             args = {
                 type = "dessert"
             },
@@ -58,13 +58,13 @@ RegisterNetEvent("qb-addnewitems:client:OpenOwnerMenu", function()
         header = "Craft Menu",
         txt = "",
         params = {
-            event = "qb-addnewitems:client:CraftMenu",
+            event = "qb-pizzeriajob:client:CraftMenu",
         }
     }
     exports['qb-menu']:openMenu(bossMenu)
 end)
 
-RegisterNetEvent("qb-addnewitems:client:CraftMenu", function()
+RegisterNetEvent("qb-pizzeriajob:client:CraftMenu", function()
     local bossMenu = {
         {
             header = "Craft Menu",
@@ -75,7 +75,7 @@ RegisterNetEvent("qb-addnewitems:client:CraftMenu", function()
         header = "Craft Food Menu",
         txt = "",
         params = {
-            event = "qb-addnewitems:client:craft",
+            event = "qb-pizzeriajob:client:craft",
             args = {
                 type = "food"
             },
@@ -85,7 +85,7 @@ RegisterNetEvent("qb-addnewitems:client:CraftMenu", function()
         header = "Craft Drink Menu",
         txt = "",
         params = {
-            event = "qb-addnewitems:client:craft",
+            event = "qb-pizzeriajob:client:craft",
             args = {
                 type = "drink"
             },
@@ -95,7 +95,7 @@ RegisterNetEvent("qb-addnewitems:client:CraftMenu", function()
         header = "Craft Dessert Menu",
         txt = "",
         params = {
-            event = "qb-addnewitems:client:craft",
+            event = "qb-pizzeriajob:client:craft",
             args = {
                 type = "dessert"
             },
@@ -105,16 +105,16 @@ RegisterNetEvent("qb-addnewitems:client:CraftMenu", function()
         header = "< Back",
         txt = "",
         params = {
-            event = "qb-addnewitems:client:OpenOwnerMenu",
+            event = "qb-pizzeriajob:client:OpenOwnerMenu",
         }
     }
     exports['qb-menu']:openMenu(bossMenu)
 end)
 
-RegisterNetEvent("qb-addnewitems:client:craft", function(data)
+RegisterNetEvent("qb-pizzeriajob:client:craft", function(data)
     local p = promise.new()
 
-    QBCore.Functions.TriggerCallback('qb-addnewitems:server:gettable', function(result)
+    QBCore.Functions.TriggerCallback('qb-pizzeriajob:server:gettable', function(result)
         p:resolve(result)
     end, data.type)
 
@@ -130,7 +130,7 @@ RegisterNetEvent("qb-addnewitems:client:craft", function(data)
             header = v.label,
             txt = "",
             params = {
-                event = "qb-addnewitems:client:craftinput",
+                event = "qb-pizzeriajob:client:craftinput",
                 args = {
                     name = v.name,
                     type = data.type,
@@ -141,7 +141,7 @@ RegisterNetEvent("qb-addnewitems:client:craft", function(data)
     exports['qb-menu']:openMenu(foodMenu)
 end)
 
-RegisterNetEvent("qb-addnewitems:client:craftinput", function(data)
+RegisterNetEvent("qb-pizzeriajob:client:craftinput", function(data)
     local craftinput = exports['qb-input']:ShowInput({
         header = "Enter all the ingredients for "..data.name.. "(Make sure the item name is right)",
         submitText = "Confirm",
@@ -184,14 +184,14 @@ RegisterNetEvent("qb-addnewitems:client:craftinput", function(data)
         if not craftinput.ingredient3 then return end
         if not craftinput.ingredient4 then return end
         if not craftinput.ingredient5 then return end
-        TriggerServerEvent("qb-additem:server:addcrafting", data.name, craftinput.ingredient1, craftinput.ingredient2, craftinput.ingredient3, craftinput.ingredient4, craftinput.ingredient5)
+        TriggerServerEvent("qb-pizzeriajob:server:addcrafting", data.name, craftinput.ingredient1, craftinput.ingredient2, craftinput.ingredient3, craftinput.ingredient4, craftinput.ingredient5)
     end
 end)
 
-RegisterNetEvent("qb-addnewitems:client:setMenu", function(data)
+RegisterNetEvent("qb-pizzeriajob:client:setMenu", function(data)
     local p = promise.new()
 
-    QBCore.Functions.TriggerCallback('qb-addnewitems:server:gettable', function(result)
+    QBCore.Functions.TriggerCallback('qb-pizzeriajob:server:gettable', function(result)
         p:resolve(result)
     end, data.type)
 
@@ -218,14 +218,14 @@ RegisterNetEvent("qb-addnewitems:client:setMenu", function(data)
         }
     })
     if test then
-        TriggerServerEvent("qb-additem:server:setItems",data.type, test)
+        TriggerServerEvent("qb-pizzeriajob:server:setItems",data.type, test)
     end
 end)
 
-RegisterNetEvent("qb-addnewitems:client:OpenStation", function(data)
+RegisterNetEvent("qb-pizzeriajob:client:OpenStation", function(data)
     local p = promise.new()
 
-    QBCore.Functions.TriggerCallback('qb-addnewitems:server:stationitems', function(result)
+    QBCore.Functions.TriggerCallback('qb-pizzeriajob:server:stationitems', function(result)
         p:resolve(result)
     end, data.station)
 
@@ -247,7 +247,7 @@ RegisterNetEvent("qb-addnewitems:client:OpenStation", function(data)
             txt = "</br><img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient1].image.." width=20px>"..QBCore.Shared.Items[v.ingredient1].label.. "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient2].image.." width=20px>".. QBCore.Shared.Items[v.ingredient2].label..  "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient3].image.." width=20px>".. QBCore.Shared.Items[v.ingredient3].label.. "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient4].image.." width=20px>".. QBCore.Shared.Items[v.ingredient4].label..  "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient5].image.." width=20px>".. QBCore.Shared.Items[v.ingredient5].label,
             -- txt = v.ingredient1,
             params = {
-                event = "qb-addnewitems:client:CraftItems",
+                event = "qb-pizzeriajob:client:CraftItems",
                 args = {
                     station = data.station,
                     progressbartext = Config.ProgressBarName[data.station],
@@ -266,8 +266,8 @@ RegisterNetEvent("qb-addnewitems:client:OpenStation", function(data)
     exports['qb-menu']:openMenu(stationMenu)
 end)
 
-RegisterNetEvent("qb-addnewitems:client:CraftItems", function(data)
-    QBCore.Functions.TriggerCallback("qb-addnewitems:server:get:ingredient", function(HasItems)
+RegisterNetEvent("qb-pizzeriajob:client:CraftItems", function(data)
+    QBCore.Functions.TriggerCallback("qb-pizzeriajob:server:get:ingredient", function(HasItems)
         if HasItems then
             local ped = PlayerPedId()
             local playerPed = PlayerPedId()
@@ -283,7 +283,7 @@ RegisterNetEvent("qb-addnewitems:client:CraftItems", function(data)
                 
                 ClearPedTasksImmediately(ped)
                 FreezeEntityPosition(playerPed, false)
-            TriggerServerEvent('qb-addnewitems:server:cook', data.required, data.item)
+            TriggerServerEvent('qb-pizzeriajob:server:cook', data.required, data.item)
             end)
         else
             QBCore.Functions.Notify("You don\'t have all the ingredients!", "error")
@@ -291,7 +291,7 @@ RegisterNetEvent("qb-addnewitems:client:CraftItems", function(data)
     end, data.required)
 end)
 
-RegisterNetEvent("qb-addnewitems:client:CreateNewItem", function()
+RegisterNetEvent("qb-pizzeriajob:client:CreateNewItem", function()
     local item = exports['qb-input']:ShowInput({
         header = "Enter the name of the item",
         submitText = "Confirm",
@@ -345,7 +345,7 @@ RegisterNetEvent("qb-addnewitems:client:CreateNewItem", function()
         if not item.image then return end
         if not item.description then return end
         if not item.foodtype then return end
-        TriggerServerEvent("qb-additem:server:additem", item.itemname, item.label, item.weight, item.image, item.description, item.foodtype)
+        TriggerServerEvent("qb-pizzeriajob:server:additem", item.itemname, item.label, item.weight, item.image, item.description, item.foodtype)
     end
 end)
 

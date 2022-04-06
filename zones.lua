@@ -7,7 +7,7 @@ exports["qb-target"]:AddBoxZone("pizzeria_laptop",vector3(797.13, -751.51, 31.27
 },{
     options = {
         {
-            event = "qb-addnewitems:client:OpenOwnerMenu",
+            event = "qb-pizzeriajob:client:OpenOwnerMenu",
             icon = "fas fa-laptop",
             label = "Item Creation",
             -- job = ""
@@ -26,7 +26,7 @@ exports["qb-target"]:AddBoxZone("foodstation",vector3(809.28, -761.17, 26.78), 1
 },{
     options = {
         {
-            event = "qb-addnewitems:client:OpenStation",
+            event = "qb-pizzeriajob:client:OpenStation",
             icon = "fas fa-laptop",
             label = "Food Station",
             station = "food"
@@ -46,7 +46,7 @@ exports["qb-target"]:AddBoxZone("drinkstation",vector3(808.86, -765.37, 26.78), 
 },{
     options = {
         {
-            event = "qb-addnewitems:client:OpenStation",
+            event = "qb-pizzeriajob:client:OpenStation",
             icon = "fas fa-laptop",
             label = "Drink Station",
             station = "drink"
