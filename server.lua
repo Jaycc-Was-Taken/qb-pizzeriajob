@@ -146,3 +146,55 @@ RegisterServerEvent("qb-additem:server:setItems", function(type, list)
 end)
 
 
+QBCore.Functions.CreateCallback('qb-addnewitems:server:get:ingredient', function(source, cb, items)
+    local testData = {}
+
+    for k, v in pairs(items) do
+        if testData[v] == nil then
+            testData[v] = {}
+            testData[v].amount = 1
+        else
+            testData[v].amount = testData[v].amount + 1
+        end
+    end
+    local src = source
+    local Ply = QBCore.Functions.GetPlayer(src)
+    local items = items
+    local hasItems = true
+    for k, v in pairs(testData) do
+        if Ply.Functions.GetItemByName(k) ~= nil then
+            hasItems = hasItems and (Ply.Functions.GetItemByName(k).amount >= v.amount)
+        else
+            hasItems = hasItems and false 
+        end
+    end
+    cb(hasItems)
+end)
+
+RegisterNetEvent("qb-addnewitems:server:cook")
+AddEventHandler("qb-addnewitems:server:cook", function(items, giveitem)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    removedItems = {}
+    local removed = true
+    for k, v in pairs(items) do
+        if Player.Functions.RemoveItem(v, 1) then
+            table.insert(removedItems, {item = v, amount = 1})
+            TriggerClientEvent("inventory:client:ItemBox", src, QBCore.Shared.Items[v], "remove")
+            removed = removed and true
+        else
+            removed = removed and false
+        end
+    end
+
+    if removed then
+        Player.Functions.AddItem(giveitem, 1)
+        TriggerClientEvent("inventory:client:ItemBox", source, QBCore.Shared.Items[giveitem], "add")
+    else
+        for k, v in pairs(removedItems) do
+            Player.Functions.AddItem(v.item, v.amount)
+            TriggerClientEvent("inventory:client:ItemBox", source, QBCore.Shared.Items[v.item], "add")
+        end
+        TriggerClientEvent('QBCore:Notify', source, "Looks like you dropped some items!", "error")
+    end
+end)

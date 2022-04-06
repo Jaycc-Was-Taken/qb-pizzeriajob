@@ -242,16 +242,18 @@ RegisterNetEvent("qb-addnewitems:client:OpenStation", function(data)
             isMenuHeader = true
         }
     }
+
     for k, v in pairs(stationitems) do
         stationMenu[#stationMenu+1] = {
             -- header = QBCore.Shared.Items[v.item].label,
             header = v.item,
-            txt = QBCore.Shared.Items[v.ingredient1].label.. " | ".. QBCore.Shared.Items[v.ingredient2].label.. " | ".. QBCore.Shared.Items[v.ingredient3].label.. " | ".. QBCore.Shared.Items[v.ingredient4].label.. " | ".. QBCore.Shared.Items[v.ingredient5].label,
+            txt = "<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient1].image.." width=20px>"..QBCore.Shared.Items[v.ingredient1].label.. "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient1].image.." width=20px>".. QBCore.Shared.Items[v.ingredient2].label..  "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient3].image.." width=20px>".. QBCore.Shared.Items[v.ingredient3].label.. "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient4].image.." width=20px>".. QBCore.Shared.Items[v.ingredient4].label..  "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient5].image.." width=20px>".. QBCore.Shared.Items[v.ingredient5].label,
             -- txt = v.ingredient1,
             params = {
-                event = "qb-addnewitems:client:OpenStationItemMenu",
+                event = "qb-addnewitems:client:CraftItems",
                 args = {
                     station = data.station,
+                    progressbartext = Config.ProgressBarName[data.station],
                     item = v,
                     required = {
                         v.ingredient1,
@@ -265,6 +267,31 @@ RegisterNetEvent("qb-addnewitems:client:OpenStation", function(data)
         }
     end
     exports['qb-menu']:openMenu(stationMenu)
+end)
+
+RegisterNetEvent("qb-addnewitems:client:CraftItems", function(data)
+    QBCore.Functions.TriggerCallback("qb-addnewitems:server:get:ingredient", function(HasItems)
+        if HasItems then
+            local ped = PlayerPedId()
+            local playerPed = PlayerPedId()
+            LoadAnim(Config.Animation[data.station].dict)
+            TaskPlayAnim(ped, Config.Animation[data.station].dict, Config.Animation[data.station].animname, 6.0, -6.0, -1, 46, 0, 0, 0, 0)
+            FreezeEntityPosition(playerPed, true)
+                QBCore.Functions.Progressbar("cutting_station", data.progressbartext , 10000, false, true, {
+                    disableMovement = true,
+                    disableCarMovement = true,
+                    disableMouse = false,
+                    disableCombat = true,
+                }, {}, {}, {}, function() -- Done    
+                
+                ClearPedTasksImmediately(ped)
+                FreezeEntityPosition(playerPed, false)
+            TriggerServerEvent('qb-addnewitems:server:cook', data.required, data.item)
+            end)
+        else
+            QBCore.Functions.Notify("You don\'t have all the ingredients!", "error")
+        end
+    end, data.required)
 end)
 
 RegisterNetEvent("qb-addnewitems:client:CreateNewItem", function()
@@ -324,3 +351,10 @@ RegisterNetEvent("qb-addnewitems:client:CreateNewItem", function()
         TriggerServerEvent("qb-additem:server:additem", item.itemname, item.label, item.weight, item.image, item.description, item.foodtype)
     end
 end)
+
+function LoadAnim(dict)
+    while (not HasAnimDictLoaded(dict)) do
+        RequestAnimDict(dict)
+        Citizen.Wait(5)
+    end
+end
