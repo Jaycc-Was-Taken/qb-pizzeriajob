@@ -1,14 +1,13 @@
 QBCore = exports["qb-core"]:GetCoreObject()
 
 local ItemsTable = {}
-local FoodTable = {"TEST"}
+local FoodTable = {}
 local DrinkTable = {}
 local DessertTable = {}
 local CraftTable = {}
 
 local function GetCraftingItems(itemname)
     for k, v in pairs(CraftTable) do
-        print("in function", v.item)
         if v.item == itemname then
             return v
         end
@@ -22,19 +21,16 @@ end)
 
 QBCore.Functions.CreateCallback("qb-addnewitems:server:gettable", function(source, cb, type)
     local returnTable = {}
-    print("type", type)
     for k, v in pairs(ItemsTable) do
         if v.foodtype == type then
             returnTable[#returnTable+1] = v
         end
     end
-    print(json.encode(returnTable))
     cb(returnTable)
 end)
 
 QBCore.Functions.CreateCallback("qb-addnewitems:server:stationitems", function(source, cb, station)
     local returnTable = {}
-    print("station", station)
     if station == "food" then
         for k, v in pairs(FoodTable) do
             local craftitems = GetCraftingItems(v)
@@ -42,25 +38,42 @@ QBCore.Functions.CreateCallback("qb-addnewitems:server:stationitems", function(s
                 returnTable[#returnTable+1] = craftitems
             end
         end
-        print("return", json.encode(returnTable))
         cb(returnTable)
     elseif station == "drink" then
-        cb(DrinkTable)
+        for k, v in pairs(DrinkTable) do
+            local craftitems = GetCraftingItems(v)
+            if craftitems ~= nil then
+                returnTable[#returnTable+1] = craftitems
+            end
+        end
+        cb(returnTable)
     elseif station == "dessert" then
-        cb(DessertTable)
+        for k, v in pairs(DessertTable) do
+            local craftitems = GetCraftingItems(v)
+            if craftitems ~= nil then
+                returnTable[#returnTable+1] = craftitems
+            end
+        end
+        cb(returnTable)
     end
     -- cb(returnTable)
 end)
 
 Citizen.CreateThread(function()
     Citizen.Wait(100)
-    local LoadJson = json.decode(LoadResourceFile(GetCurrentResourceName(), 'crafting.json'))
+    local LoadJson = json.decode(LoadResourceFile(GetCurrentResourceName(), 'json/crafting.json'))
+    local LoadJson2 = json.decode(LoadResourceFile(GetCurrentResourceName(), 'json/food.json'))
+    local LoadJson3 = json.decode(LoadResourceFile(GetCurrentResourceName(), 'json/drink.json'))
+    local LoadJson4 = json.decode(LoadResourceFile(GetCurrentResourceName(), 'json/dessert.json'))
     CraftTable = LoadJson
+    FoodTable = LoadJson2
+    DrinkTable = LoadJson3
+    DessertTable = LoadJson4
 end)
 
 Citizen.CreateThread(function()
     Citizen.Wait(100)
-    local LoadJson = json.decode(LoadResourceFile(GetCurrentResourceName(), 'items.json'))
+    local LoadJson = json.decode(LoadResourceFile(GetCurrentResourceName(), 'json/items.json'))
     ItemsTable = LoadJson
     for k, v in pairs(ItemsTable) do
         local infotable = {
@@ -98,35 +111,48 @@ RegisterServerEvent("qb-additem:server:additem", function(itemName, label, weigh
 
     infotable.foodtype = foodtype
     table.insert(ItemsTable, infotable)
-    SaveResourceFile(GetCurrentResourceName(), "items.json", json.encode(ItemsTable), -1)
+    SaveResourceFile(GetCurrentResourceName(), "json/items.json", json.encode(ItemsTable), -1)
 end)
 
-RegisterServerEvent("qb-additem:server:addcrafting", function(itemName, ingredient1, ingredient2, ingredient3,ingredient4, ingredient5)
-    -- local infotable = {
-    --     name = itemName,
-    --     type = 'item',
-    --     unique = false,
-    --     useable = true,
-    --     shouldClose = true,
-    --     combinable = nil,
-    --     label = label,
-    --     weight = weight,
-    --     image = image,
-    --     description = description
-    -- }
-    local infotable = {
-        item = itemName,
-        ingredient1 = ingredient1,
-        ingredient2 = ingredient2,
-        ingredient3 = ingredient3,
-        ingredient4 = ingredient4,
-        ingredient5 = ingredient5
-    }
-    -- exports["qb-core"]:AddItem(infotable.name, infotable)
+local function HasCrafting(itemName)
+    for k, v in pairs(CraftTable) do
+        if v.item == itemName then
+            return k
+        end
+    end
+end
 
+RegisterServerEvent("qb-additem:server:addcrafting", function(itemName, ingredient1, ingredient2, ingredient3,ingredient4, ingredient5)
+
+    local index = HasCrafting(itemName)
+    local infotable = {}    
+    if QBCore.Shared.Items[ingredient1] ~= nil and QBCore.Shared.Items[ingredient1] ~= nil and QBCore.Shared.Items[ingredient3] ~= nil and QBCore.Shared.Items[ingredient4] ~= nil and QBCore.Shared.Items[ingredient5] ~= nil then
+        if index ~= nil then
+            print(CraftTable[index].item)
+            CraftTable[index].ingredient1 = ingredient1
+            CraftTable[index].ingredient2 = ingredient2
+            CraftTable[index].ingredient3 = ingredient3
+            CraftTable[index].ingredient4 = ingredient4
+            CraftTable[index].ingredient5 = ingredient5
+        else
+            infotable = {
+                item = itemName,
+                ingredient1 = ingredient1,
+                ingredient2 = ingredient2,
+                ingredient3 = ingredient3,
+                ingredient4 = ingredient4,
+                ingredient5 = ingredient5
+            }
+            -- exports["qb-core"]:AddItem(infotable.name, infotable)
+            table.insert(CraftTable, infotable)
+        end
+    else
+        local missingIngredients = { QBCore.Shared.Items[ingredient1] == nil and "Ingredient1" or "", QBCore.Shared.Items[ingredient2] == nil and "Ingredient2" or "", QBCore.Shared.Items[ingredient3] == nil and "Ingredient3" or "", QBCore.Shared.Items[ingredient4] == nil and "Ingredient4" or "", QBCore.Shared.Items[ingredient5] == nil and "Ingredient5" or "" }
+        TriggerClientEvent("QBCore:Notify", source, table.concat(missingIngredients, " ") .." doesnt exist.", "error")
+    end
     -- infotable.foodtype = foodtype
-    table.insert(CraftTable, infotable)
-    SaveResourceFile(GetCurrentResourceName(), "crafting.json", json.encode(CraftTable), -1)
+    
+    SaveResourceFile(GetCurrentResourceName(), "json/crafting.json", json.encode(CraftTable), -1)
 end)
 
 
@@ -135,6 +161,7 @@ RegisterServerEvent("qb-additem:server:setItems", function(type, list)
     for k, v in pairs(list) do
         if v == "true" then
             if type == "food" then
+                print("food", json.encode(FoodTable), k)
                 table.insert(FoodTable, k)
             elseif type == "drink" then
                 table.insert(DrinkTable, k)
@@ -143,6 +170,9 @@ RegisterServerEvent("qb-additem:server:setItems", function(type, list)
             end
         end
     end
+    SaveResourceFile(GetCurrentResourceName(), "json/food.json", json.encode(FoodTable), -1)
+    SaveResourceFile(GetCurrentResourceName(), "json/drink.json", json.encode(DrinkTable), -1)
+    SaveResourceFile(GetCurrentResourceName(), "json/dessert.json", json.encode(DessertTable), -1)
 end)
 
 

@@ -19,6 +19,6 @@ end)
 TODO
 
 - add options to craft the items (Done)
-- create 3 seperate json files for items selected before restarts
+- create 3 seperate json files for items selected before restarts ( dont)
 - make the new items useable
-- check if the item is already in crafting.json
+- check if the item is already in crafting.json (done)

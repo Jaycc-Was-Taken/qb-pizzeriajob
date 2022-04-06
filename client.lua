@@ -1,8 +1,10 @@
-QBCore = nil
+local QBCore = nil
 
 QBCore = exports["qb-core"]:GetCoreObject()
 
-RegisterNetEvent('QBCore:Client:UpdateObject', function()
+RegisterNetEvent('QBCore:Client:UpdateObject')
+AddEventHandler('QBCore:Client:UpdateObject', function()
+    print("Updating Object??")
 	QBCore = exports['qb-core']:GetCoreObject()
 end)
 
@@ -140,7 +142,6 @@ RegisterNetEvent("qb-addnewitems:client:craft", function(data)
 end)
 
 RegisterNetEvent("qb-addnewitems:client:craftinput", function(data)
-    print(json.encode(data))
     local craftinput = exports['qb-input']:ShowInput({
         header = "Enter all the ingredients for "..data.name.. "(Make sure the item name is right)",
         submitText = "Confirm",
@@ -217,11 +218,6 @@ RegisterNetEvent("qb-addnewitems:client:setMenu", function(data)
         }
     })
     if test then
-       
-        print(json.encode(test))
-    end
-    
-    if test then
         TriggerServerEvent("qb-additem:server:setItems",data.type, test)
     end
 end)
@@ -234,8 +230,7 @@ RegisterNetEvent("qb-addnewitems:client:OpenStation", function(data)
     end, data.station)
 
     local stationitems = Citizen.Await(p)
-    print(json.encode(stationitems))
-    -- print(json.encode(stationitems))
+
     local stationMenu = {
         {
             header = "Pizzeria Station Menu",
@@ -244,17 +239,19 @@ RegisterNetEvent("qb-addnewitems:client:OpenStation", function(data)
     }
 
     for k, v in pairs(stationitems) do
+        -- print(QBCore.Shared.Items[v.item].label)
         stationMenu[#stationMenu+1] = {
+            
             -- header = QBCore.Shared.Items[v.item].label,
-            header = v.item,
-            txt = "<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient1].image.." width=20px>"..QBCore.Shared.Items[v.ingredient1].label.. "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient1].image.." width=20px>".. QBCore.Shared.Items[v.ingredient2].label..  "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient3].image.." width=20px>".. QBCore.Shared.Items[v.ingredient3].label.. "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient4].image.." width=20px>".. QBCore.Shared.Items[v.ingredient4].label..  "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient5].image.." width=20px>".. QBCore.Shared.Items[v.ingredient5].label,
+            header = "<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.item].image.." width=35px>"..QBCore.Shared.Items[v.item].label,
+            txt = "</br><img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient1].image.." width=20px>"..QBCore.Shared.Items[v.ingredient1].label.. "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient2].image.." width=20px>".. QBCore.Shared.Items[v.ingredient2].label..  "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient3].image.." width=20px>".. QBCore.Shared.Items[v.ingredient3].label.. "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient4].image.." width=20px>".. QBCore.Shared.Items[v.ingredient4].label..  "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient5].image.." width=20px>".. QBCore.Shared.Items[v.ingredient5].label,
             -- txt = v.ingredient1,
             params = {
                 event = "qb-addnewitems:client:CraftItems",
                 args = {
                     station = data.station,
                     progressbartext = Config.ProgressBarName[data.station],
-                    item = v,
+                    item = v.item,
                     required = {
                         v.ingredient1,
                         v.ingredient2,
