@@ -20,3 +20,5 @@ Config.ProgressBarName = {
     ["drink"] = "Pouring Drink",
     ["dessert"] = "Cooking Dessert"
 }
+
+Config.FolderName = "qb-pizzeriajob"

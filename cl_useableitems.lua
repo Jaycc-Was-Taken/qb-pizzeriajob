@@ -1,5 +1,5 @@
 
-RegisterNetEvent("qb-pizzeriajob:client:UseFood", function(itemName)
+RegisterNetEvent(Config.FolderName..":client:UseFood", function(itemName)
     TriggerEvent('animations:client:EmoteCommandStart', {"eat"})
     QBCore.Functions.Progressbar("eat_something", "Eating..", 5000, false, true, {
         disableMovement = false,
@@ -7,7 +7,7 @@ RegisterNetEvent("qb-pizzeriajob:client:UseFood", function(itemName)
 		disableMouse = false,
 		disableCombat = true,
     }, {}, {}, {}, function() -- Done
-        TriggerServerEvent("qb-pizzeriajob:server:removeItem", itemName)
+        TriggerServerEvent(Config.FolderName..":server:removeItem", itemName)
         TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items[itemName], "remove")
         TriggerEvent('animations:client:EmoteCommandStart', {"c"})
         TriggerServerEvent("QBCore:Server:SetMetaData", "hunger", QBCore.Functions.GetPlayerData().metadata["hunger"] + 20)
@@ -15,7 +15,7 @@ RegisterNetEvent("qb-pizzeriajob:client:UseFood", function(itemName)
     end)
 end)
 
-RegisterNetEvent("qb-pizzeriajob:client:UseDrink", function(itemName)
+RegisterNetEvent(Config.FolderName..":client:UseDrink", function(itemName)
     TriggerEvent('animations:client:EmoteCommandStart', {"drink"})
     QBCore.Functions.Progressbar("drink_something", "Drinking..", 5000, false, true, {
         disableMovement = false,
@@ -23,7 +23,7 @@ RegisterNetEvent("qb-pizzeriajob:client:UseDrink", function(itemName)
         disableMouse = false,
         disableCombat = true,
     }, {}, {}, {}, function() -- Done
-        TriggerServerEvent("qb-pizzeriajob:server:removeItem", itemName)
+        TriggerServerEvent(Config.FolderName..":server:removeItem", itemName)
         TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items[itemName], "remove")
         TriggerEvent('animations:client:EmoteCommandStart', {"c"})
         TriggerServerEvent("QBCore:Server:SetMetaData", "thirst", QBCore.Functions.GetPlayerData().metadata["thirst"] + 20)
@@ -31,7 +31,7 @@ RegisterNetEvent("qb-pizzeriajob:client:UseDrink", function(itemName)
     end)
 end)
 
-RegisterNetEvent("qb-pizzeriajob:client:UseDessert", function(itemName)
+RegisterNetEvent(Config.FolderName..":client:UseDessert", function(itemName)
     TriggerEvent('animations:client:EmoteCommandStart', {"donut"})
     QBCore.Functions.Progressbar("eat_something", "Eating..", 5000, false, true, {
         disableMovement = false,
@@ -39,7 +39,7 @@ RegisterNetEvent("qb-pizzeriajob:client:UseDessert", function(itemName)
         disableMouse = false,
         disableCombat = true,
     }, {}, {}, {}, function() -- Done
-        TriggerServerEvent("qb-pizzeriajob:server:removeItem", itemName)
+        TriggerServerEvent(Config.FolderName..":server:removeItem", itemName)
         TriggerEvent("inventory:client:ItemBox", QBCore.Shared.Items[itemName], "remove")
         TriggerEvent('animations:client:EmoteCommandStart', {"c"})
         TriggerServerEvent("QBCore:Server:SetMetaData", "hunger", QBCore.Functions.GetPlayerData().metadata["hunger"] + 20)

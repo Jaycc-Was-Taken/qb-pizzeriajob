@@ -20,7 +20,7 @@ local function RegisterUseableItems(foodtype, itemname)
             local src = source
             local Player = QBCore.Functions.GetPlayer(src)
             if Player.Functions.GetItemByName(item.name) ~= nil then
-                TriggerClientEvent("qb-pizzeriajob:client:UseFood", src, item.name)
+                TriggerClientEvent(Config.FolderName..":client:UseFood", src, item.name)
             end
         end)
     elseif foodtype == "drink" then
@@ -28,7 +28,7 @@ local function RegisterUseableItems(foodtype, itemname)
             local src = source
             local Player = QBCore.Functions.GetPlayer(src)
             if Player.Functions.GetItemByName(item.name) ~= nil then
-                TriggerClientEvent("qb-pizzeriajob:client:UseDrink", src, item.name)
+                TriggerClientEvent(Config.FolderName..":client:UseDrink", src, item.name)
             end
         end)
     elseif foodtype == "dessert" then
@@ -36,7 +36,7 @@ local function RegisterUseableItems(foodtype, itemname)
             local src = source
             local Player = QBCore.Functions.GetPlayer(src)
             if Player.Functions.GetItemByName(item.name) ~= nil then
-                TriggerClientEvent("qb-pizzeriajob:client:UseDessert", src, item.name)
+                TriggerClientEvent(Config.FolderName..":client:UseDessert", src, item.name)
             end
         end)
     end
@@ -47,7 +47,7 @@ RegisterNetEvent('QBCore:Server:UpdateObject', function()
     QBCore = exports['qb-core']:GetCoreObject()
 end)
 
-QBCore.Functions.CreateCallback("qb-pizzeriajob:server:gettable", function(source, cb, type)
+QBCore.Functions.CreateCallback(Config.FolderName..":server:gettable", function(source, cb, type)
     local returnTable = {}
     for k, v in pairs(ItemsTable) do
         if v.foodtype == type then
@@ -57,7 +57,7 @@ QBCore.Functions.CreateCallback("qb-pizzeriajob:server:gettable", function(sourc
     cb(returnTable)
 end)
 
-QBCore.Functions.CreateCallback("qb-pizzeriajob:server:stationitems", function(source, cb, station)
+QBCore.Functions.CreateCallback(Config.FolderName..":server:stationitems", function(source, cb, station)
     local returnTable = {}
     if station == "food" then
         for k, v in pairs(FoodTable) do
@@ -121,13 +121,13 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterServerEvent("qb-pizzeriajob:server:removeItem", function(itemName)
+RegisterServerEvent(Config.FolderName..":server:removeItem", function(itemName)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     Player.Functions.RemoveItem(itemName, 1)
 end)
 
-RegisterServerEvent("qb-pizzeriajob:server:additem", function(itemName, label, weight, image, description, foodtype)
+RegisterServerEvent(Config.FolderName..":server:additem", function(itemName, label, weight, image, description, foodtype)
     local infotable = {
         name = itemName,
         type = 'item',
@@ -156,7 +156,7 @@ local function HasCrafting(itemName)
     end
 end
 
-RegisterServerEvent("qb-pizzeriajob:server:addcrafting", function(itemName, ingredient1, ingredient2, ingredient3,ingredient4, ingredient5)
+RegisterServerEvent(Config.FolderName..":server:addcrafting", function(itemName, ingredient1, ingredient2, ingredient3,ingredient4, ingredient5)
 
     local index = HasCrafting(itemName)
     local infotable = {}    
@@ -189,7 +189,7 @@ RegisterServerEvent("qb-pizzeriajob:server:addcrafting", function(itemName, ingr
 end)
 
 
-RegisterServerEvent("qb-pizzeriajob:server:setItems", function(type, list)
+RegisterServerEvent(Config.FolderName..":server:setItems", function(type, list)
 
     for k, v in pairs(list) do
         if v == "true" then
@@ -208,7 +208,7 @@ RegisterServerEvent("qb-pizzeriajob:server:setItems", function(type, list)
 end)
 
 
-QBCore.Functions.CreateCallback('qb-pizzeriajob:server:get:ingredient', function(source, cb, items)
+QBCore.Functions.CreateCallback(Config.FolderName..':server:get:ingredient', function(source, cb, items)
     local testData = {}
 
     for k, v in pairs(items) do
@@ -233,8 +233,8 @@ QBCore.Functions.CreateCallback('qb-pizzeriajob:server:get:ingredient', function
     cb(hasItems)
 end)
 
-RegisterNetEvent("qb-pizzeriajob:server:cook")
-AddEventHandler("qb-pizzeriajob:server:cook", function(items, giveitem)
+RegisterNetEvent(Config.FolderName..":server:cook")
+AddEventHandler(Config.FolderName..":server:cook", function(items, giveitem)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     removedItems = {}

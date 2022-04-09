@@ -4,13 +4,12 @@ QBCore = exports["qb-core"]:GetCoreObject()
 
 RegisterNetEvent('QBCore:Client:UpdateObject')
 AddEventHandler('QBCore:Client:UpdateObject', function()
-    print("Updating Object??")
 	QBCore = exports['qb-core']:GetCoreObject()
 end)
 
 -- RegisterCommand("createnewitem", function()
     
-RegisterNetEvent("qb-pizzeriajob:client:OpenOwnerMenu", function()
+RegisterNetEvent(Config.FolderName..":client:OpenOwnerMenu", function()
     local bossMenu = {
         {
             header = "Pizzeria Boss Menu",
@@ -21,14 +20,14 @@ RegisterNetEvent("qb-pizzeriajob:client:OpenOwnerMenu", function()
         header = "Create new Food Item",
         txt = "",
         params = {
-            event = "qb-pizzeriajob:client:CreateNewItem",
+            event = Config.FolderName..":client:CreateNewItem",
         }
     }
     bossMenu[#bossMenu+1] = {
         header = "Set Food Menu",
         txt = "",
         params = {
-            event = "qb-pizzeriajob:client:setMenu",
+            event = Config.FolderName..":client:setMenu",
             args = {
                 type = "food"
             },
@@ -38,7 +37,7 @@ RegisterNetEvent("qb-pizzeriajob:client:OpenOwnerMenu", function()
         header = "Set Drink Menu",
         txt = "",
         params = {
-            event = "qb-pizzeriajob:client:setMenu",
+            event = Config.FolderName..":client:setMenu",
             args = {
                 type = "drink"
             },
@@ -48,7 +47,7 @@ RegisterNetEvent("qb-pizzeriajob:client:OpenOwnerMenu", function()
         header = "Set Dessert Menu",
         txt = "",
         params = {
-            event = "qb-pizzeriajob:client:setMenu",
+            event = Config.FolderName..":client:setMenu",
             args = {
                 type = "dessert"
             },
@@ -58,13 +57,13 @@ RegisterNetEvent("qb-pizzeriajob:client:OpenOwnerMenu", function()
         header = "Craft Menu",
         txt = "",
         params = {
-            event = "qb-pizzeriajob:client:CraftMenu",
+            event = Config.FolderName..":client:CraftMenu",
         }
     }
     exports['qb-menu']:openMenu(bossMenu)
 end)
 
-RegisterNetEvent("qb-pizzeriajob:client:CraftMenu", function()
+RegisterNetEvent(Config.FolderName..":client:CraftMenu", function()
     local bossMenu = {
         {
             header = "Craft Menu",
@@ -75,7 +74,7 @@ RegisterNetEvent("qb-pizzeriajob:client:CraftMenu", function()
         header = "Craft Food Menu",
         txt = "",
         params = {
-            event = "qb-pizzeriajob:client:craft",
+            event = Config.FolderName..":client:craft",
             args = {
                 type = "food"
             },
@@ -85,7 +84,7 @@ RegisterNetEvent("qb-pizzeriajob:client:CraftMenu", function()
         header = "Craft Drink Menu",
         txt = "",
         params = {
-            event = "qb-pizzeriajob:client:craft",
+            event = Config.FolderName..":client:craft",
             args = {
                 type = "drink"
             },
@@ -95,7 +94,7 @@ RegisterNetEvent("qb-pizzeriajob:client:CraftMenu", function()
         header = "Craft Dessert Menu",
         txt = "",
         params = {
-            event = "qb-pizzeriajob:client:craft",
+            event = Config.FolderName..":client:craft",
             args = {
                 type = "dessert"
             },
@@ -105,16 +104,16 @@ RegisterNetEvent("qb-pizzeriajob:client:CraftMenu", function()
         header = "< Back",
         txt = "",
         params = {
-            event = "qb-pizzeriajob:client:OpenOwnerMenu",
+            event = Config.FolderName..":client:OpenOwnerMenu",
         }
     }
     exports['qb-menu']:openMenu(bossMenu)
 end)
 
-RegisterNetEvent("qb-pizzeriajob:client:craft", function(data)
+RegisterNetEvent(Config.FolderName..":client:craft", function(data)
     local p = promise.new()
 
-    QBCore.Functions.TriggerCallback('qb-pizzeriajob:server:gettable', function(result)
+    QBCore.Functions.TriggerCallback(Config.FolderName..':server:gettable', function(result)
         p:resolve(result)
     end, data.type)
 
@@ -130,7 +129,7 @@ RegisterNetEvent("qb-pizzeriajob:client:craft", function(data)
             header = v.label,
             txt = "",
             params = {
-                event = "qb-pizzeriajob:client:craftinput",
+                event = Config.FolderName..":client:craftinput",
                 args = {
                     name = v.name,
                     type = data.type,
@@ -141,7 +140,7 @@ RegisterNetEvent("qb-pizzeriajob:client:craft", function(data)
     exports['qb-menu']:openMenu(foodMenu)
 end)
 
-RegisterNetEvent("qb-pizzeriajob:client:craftinput", function(data)
+RegisterNetEvent(Config.FolderName..":client:craftinput", function(data)
     local craftinput = exports['qb-input']:ShowInput({
         header = "Enter all the ingredients for "..data.name.. "(Make sure the item name is right)",
         submitText = "Confirm",
@@ -184,14 +183,14 @@ RegisterNetEvent("qb-pizzeriajob:client:craftinput", function(data)
         if not craftinput.ingredient3 then return end
         if not craftinput.ingredient4 then return end
         if not craftinput.ingredient5 then return end
-        TriggerServerEvent("qb-pizzeriajob:server:addcrafting", data.name, craftinput.ingredient1, craftinput.ingredient2, craftinput.ingredient3, craftinput.ingredient4, craftinput.ingredient5)
+        TriggerServerEvent(Config.FolderName..":server:addcrafting", data.name, craftinput.ingredient1, craftinput.ingredient2, craftinput.ingredient3, craftinput.ingredient4, craftinput.ingredient5)
     end
 end)
 
-RegisterNetEvent("qb-pizzeriajob:client:setMenu", function(data)
+RegisterNetEvent(Config.FolderName..":client:setMenu", function(data)
     local p = promise.new()
 
-    QBCore.Functions.TriggerCallback('qb-pizzeriajob:server:gettable', function(result)
+    QBCore.Functions.TriggerCallback(Config.FolderName..':server:gettable', function(result)
         p:resolve(result)
     end, data.type)
 
@@ -218,14 +217,14 @@ RegisterNetEvent("qb-pizzeriajob:client:setMenu", function(data)
         }
     })
     if test then
-        TriggerServerEvent("qb-pizzeriajob:server:setItems",data.type, test)
+        TriggerServerEvent(Config.FolderName..":server:setItems",data.type, test)
     end
 end)
 
-RegisterNetEvent("qb-pizzeriajob:client:OpenStation", function(data)
+RegisterNetEvent(Config.FolderName..":client:OpenStation", function(data)
     local p = promise.new()
 
-    QBCore.Functions.TriggerCallback('qb-pizzeriajob:server:stationitems', function(result)
+    QBCore.Functions.TriggerCallback(Config.FolderName..':server:stationitems', function(result)
         p:resolve(result)
     end, data.station)
 
@@ -247,7 +246,7 @@ RegisterNetEvent("qb-pizzeriajob:client:OpenStation", function(data)
             txt = "</br><img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient1].image.." width=20px>"..QBCore.Shared.Items[v.ingredient1].label.. "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient2].image.." width=20px>".. QBCore.Shared.Items[v.ingredient2].label..  "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient3].image.." width=20px>".. QBCore.Shared.Items[v.ingredient3].label.. "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient4].image.." width=20px>".. QBCore.Shared.Items[v.ingredient4].label..  "</br>".."<img src=nui://qb-inventory/html/images/"..QBCore.Shared.Items[v.ingredient5].image.." width=20px>".. QBCore.Shared.Items[v.ingredient5].label,
             -- txt = v.ingredient1,
             params = {
-                event = "qb-pizzeriajob:client:CraftItems",
+                event = Config.FolderName..":client:CraftItems",
                 args = {
                     station = data.station,
                     progressbartext = Config.ProgressBarName[data.station],
@@ -266,8 +265,8 @@ RegisterNetEvent("qb-pizzeriajob:client:OpenStation", function(data)
     exports['qb-menu']:openMenu(stationMenu)
 end)
 
-RegisterNetEvent("qb-pizzeriajob:client:CraftItems", function(data)
-    QBCore.Functions.TriggerCallback("qb-pizzeriajob:server:get:ingredient", function(HasItems)
+RegisterNetEvent(Config.FolderName..":client:CraftItems", function(data)
+    QBCore.Functions.TriggerCallback(Config.FolderName..":server:get:ingredient", function(HasItems)
         if HasItems then
             local ped = PlayerPedId()
             local playerPed = PlayerPedId()
@@ -283,7 +282,7 @@ RegisterNetEvent("qb-pizzeriajob:client:CraftItems", function(data)
                 
                 ClearPedTasksImmediately(ped)
                 FreezeEntityPosition(playerPed, false)
-            TriggerServerEvent('qb-pizzeriajob:server:cook', data.required, data.item)
+            TriggerServerEvent(Config.FolderName..':server:cook', data.required, data.item)
             end)
         else
             QBCore.Functions.Notify("You don\'t have all the ingredients!", "error")
@@ -291,7 +290,7 @@ RegisterNetEvent("qb-pizzeriajob:client:CraftItems", function(data)
     end, data.required)
 end)
 
-RegisterNetEvent("qb-pizzeriajob:client:CreateNewItem", function()
+RegisterNetEvent(Config.FolderName..":client:CreateNewItem", function()
     local item = exports['qb-input']:ShowInput({
         header = "Enter the name of the item",
         submitText = "Confirm",
@@ -345,7 +344,7 @@ RegisterNetEvent("qb-pizzeriajob:client:CreateNewItem", function()
         if not item.image then return end
         if not item.description then return end
         if not item.foodtype then return end
-        TriggerServerEvent("qb-pizzeriajob:server:additem", item.itemname, item.label, item.weight, item.image, item.description, item.foodtype)
+        TriggerServerEvent(Config.FolderName..":server:additem", item.itemname, item.label, item.weight, item.image, item.description, item.foodtype)
     end
 end)
 
